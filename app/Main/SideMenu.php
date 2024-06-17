@@ -29,17 +29,26 @@ class SideMenu
                                 'params' => [
                                     'layout' => 'side-menu'
                                 ],
-                                'title' => 'Antrian Surat'
+                                'title' => 'Antrian Aduan'
                             ],
-            'Regis' => [
+            'Setting Pemilihan' => [
                                 'icon' => 'user',
                                 'title' => 'Regis',
-                                        
+                                    'route_name' => 'SettingPemilihan',
                                         'params' => [
                                             'layout' => 'side-menu'
                                         ],
-                                        'title' => 'Registrasi User'
+                                        'title' => 'Setting Aduan'
                                     ],
+            'Setting Tahun Pemilihan' => [
+                                    'icon' => 'box',
+                                    'title' => 'Setting Tahun Pemilihan',
+                                            'route_name' => 'SettingTahunPemilihan',
+                                            'params' => [
+                                                'layout' => 'side-menu'
+                                            ],
+                                            'title' => 'Setting Tahun Aduan'
+                                        ],
         ];
     }
 }

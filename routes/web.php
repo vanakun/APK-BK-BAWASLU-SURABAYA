@@ -1,5 +1,16 @@
 <?php
 
+use App\Http\Controllers\Admin\AduanDpdRiController;
+use App\Http\Controllers\Admin\AduanDprRiController;
+use App\Http\Controllers\Admin\AduanPresidenWakilPresidenController;
+use App\Http\Controllers\Admin\CalonDpdRiController;
+use App\Http\Controllers\Admin\CalonDprdKotaController;
+use App\Http\Controllers\Admin\CalonDprdProvinsiController;
+use App\Http\Controllers\Admin\CalonDprRiController;
+use App\Http\Controllers\Admin\PartaiController;
+use App\Http\Controllers\Admin\PresidenWakilPresidenController;
+use App\Http\Controllers\Admin\AduanDprdProvinsiController;
+use App\Http\Controllers\Admin\AduanDprdKabupatenController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PageController;
@@ -13,8 +24,8 @@ use App\Http\Controllers\DarkModeController;
 use App\Http\Controllers\ColorSchemeController;
 use App\Http\Controllers\Admin\CetakController;
 
-use App\Http\Controllers\Perusahaan\JurnalController;
-use App\Http\Controllers\Perusahaan\JurnalUmumController;
+
+
 
 
 /*
@@ -31,6 +42,10 @@ use App\Http\Controllers\Perusahaan\JurnalUmumController;
 Route::get('dark-mode-switcher', [DarkModeController::class, 'switch'])->name('dark-mode-switcher');
 Route::get('color-scheme-switcher/{color_scheme}', [ColorSchemeController::class, 'switch'])->name('color-scheme-switcher');
 
+
+
+
+
 Route::middleware(['guest'])->group(function () {
     Route::get('login', [LoginController::class, 'loginView'])->name('login.index');
     Route::post('login', [LoginController::class, 'login'])->name('login.check');
@@ -39,103 +54,92 @@ Route::middleware(['guest'])->group(function () {
 });
 Route::middleware('auth')->group(function() {
     
-    Route::get('/', [PageController::class, 'handleRole'])->name('dashboard');
     // Contoh: Rute admin
     Route::middleware('role:Admin')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('adminDashboard');
+        Route::get('/chart-aduan-presiden-status', [AdminController::class, 'getAduanPresidenByStatus']);
 
         Route::prefix('antrian')->group(function () {
-            Route::get('/', [JurnalUmumController::class, 'index'])->name('index');
-            Route::get('/jurnal', [JurnalController::class, 'indexjurnal'])->name('indexjurnal');
 
-            Route::get('/surat', [AdminController::class, 'indexAntrian'])->name('indexAntrian');
+            Route::get('/aduan', [AdminController::class, 'indexAntrian'])->name('indexAntrian');
+            Route::get('/setting-pemilihan', [AdminController::class, 'SettingPemilihan'])->name('SettingPemilihan');
 
-            Route::get('/suratpm', [AdminController::class, 'indexAntrianpm'])->name('indexAntrianpm');
-            Route::get('/edit-suratpm/{id}', [AdminController::class, 'editsuratpm'])->name('editsuratpm');
-            Route::post('/updatesuratpm/{id}', [AdminController::class, 'updatepm'])->name('updatesuratpm');
-            Route::get('/edit-suratpmdone/{id}', [AdminController::class, 'editsuratpmdone'])->name('editsuratpmdone');
-            Route::post('/updatesuratpmdone/{id}', [AdminController::class, 'updatepmdone'])->name('updatepmdone');
-            Route::get('/cetakpm', [CetakController::class, 'cetakpm'])->name('cetakpm');
-            Route::post('/tolak-surat/{id}', [AdminController::class, 'tolakSurat'])->name('tolakSurat');
+            Route::get('/setting-tahun-pemilihan', [AdminController::class, 'SettingTahunPemilihan'])->name('SettingTahunPemilihan');
+            Route::get('/create-tahun-pemilihan', [AdminController::class, 'createTahunPemilihan'])->name('createTahunPemilihan');
+            Route::post('/store-tahun-pemilihan', [AdminController::class, 'storeTahunPemilihan'])->name('storeTahunPemilihan');
+            Route::delete('/tahun-pemilihan/{id}', [AdminController::class, 'destroyTahunPemilihan'])->name('destroyTahunPemilihan');
+            Route::get('/edit/tahun-pemilihan/{id}', [AdminController::class, 'editTahunPemilihan'])->name('editTahunPemilihan');
+            Route::put('/tahun-pemilihan/{id}', [AdminController::class, 'updateTahunPemilihan'])->name('updateTahunPemilihan');
+            Route::post('/tahun-pemilihan-aktif', [AdminController::class, 'updatetahunpemilianaktif'])->name('updatetahunpemilianaktif');
+            
+            Route::get('/show-partai', [PartaiController::class, 'indexpartai'])->name('indexpartai');
+            Route::get('/create-partai', [PartaiController::class, 'createpartai'])->name('createpartai');
+            Route::post('/store-partai', [PartaiController::class, 'storepartai'])->name('storepartai');
+            Route::get('/partai/{id}', [PartaiController::class, 'showpartai'])->name('showpartai');
+            Route::get('/edit/partai/{id}', [PartaiController::class, 'editpartai'])->name('editpartai');
+            Route::put('/partai-update/{id}', [PartaiController::class, 'updatepartai'])->name('partai.update');
+            Route::delete('/partai/{id}', [PartaiController::class, 'destroy'])->name('partai.destroy');
+
+            Route::resource('presiden-wakil-presiden', PresidenWakilPresidenController::class);
+            Route::get('/show-presiden', [PresidenWakilPresidenController::class, 'indexPresiden'])->name('indexPresiden');
+            Route::get('/create-presiden', [PresidenWakilPresidenController::class, 'createpresiden'])->name('createpresiden');
+            Route::post('/store-presiden-wakil', [PresidenWakilPresidenController::class, 'storePresiden'])->name('storePresiden');
+            Route::get('/edit/presidenwakil/{id}', [PresidenWakilPresidenController::class, 'editPresiden'])->name('editPresiden');
+            
+            
+            Route::resource('calon_dpr_ri', CalonDprRiController::class);
+            Route::get('/show-calon-dpr-ri', [CalonDprRiController::class, 'indexDprRi'])->name('indexDprRi');
+            Route::get('/create-calon-dpr-ri', [CalonDprRiController::class, 'createDprRi'])->name('createDprRi');
+            Route::post('/store-calon-dpr-ri', [CalonDprRiController::class, 'StoreDprRi'])->name('StoreDprRi');
+            Route::get('/edit/calon-dpr-ri/{id}', [CalonDprRiController::class, 'editDprRI'])->name('editDprRI');
+            Route::put('/calon-dpr-ri/{id}', [CalonDprRiController::class, 'updateDprRi'])->name('updateDprRi');
+
+            Route::resource('calon_dpd_ri', CalonDpdRiController::class);
+            Route::resource('calon_dprd_provinsi', CalonDprdProvinsiController::class);
+            Route::resource('calon-dprd-kota',CalonDprdKotaController::class);
+
+            Route::resource('aduan_presiden_wakil_presiden', AduanPresidenWakilPresidenController::class);
+            Route::get('/aduan/presiden-wakil', [AduanPresidenWakilPresidenController::class, 'indexAntrianPresidenwakil'])->name('indexAntrianPresidenwakil');
+            Route::get('/edit-presiden-wakil/{id}', [AduanPresidenWakilPresidenController::class, 'editaduanpresidenwakil'])->name('editaduanpresidenwakil');
+            Route::post('/update/presiden-wakil/{id}', [AduanPresidenWakilPresidenController::class, 'updateAduanPresidenWakil'])->name('updateAduanPresidenWakil');
+            Route::get('/insert-queue-presiden-wakil/{id}', [AduanPresidenWakilPresidenController::class, 'insertqueuePresidenWakil'])->name('insertqueuePresidenWakil');
+            Route::post('/update-queue/presiden-wakil/{id}', [AduanPresidenWakilPresidenController::class, 'updatequeuePresidenWakil'])->name('updatequeuePresidenWakil');
+            Route::get('/aduan-presiden/cetak', [AduanPresidenWakilPresidenController::class, 'cetak'])->name('aduan.presiden.cetak');
 
 
-            Route::get('/suratpp', [AdminController::class, 'indexAntrianpp'])->name('indexAntrianpp');
-            Route::get('/edit-suratpp/{id}', [AdminController::class, 'editsuratpp'])->name('editsuratpp');
-            Route::post('/updatesuratpp/{id}', [AdminController::class, 'updatepp'])->name('updatesuratpp');
-            Route::get('/edit-suratppdone/{id}', [AdminController::class, 'editsuratppdone'])->name('editsuratppdone');
-            Route::post('/updatesuratppdone/{id}', [AdminController::class, 'updateppdone'])->name('updateppdone');
+            Route::resource('aduan_dpd_ri', AduanDpdRiController::class);
+            Route::get('/aduan/dpd', [AduanDpdRiController::class, 'indexAntriandpd'])->name('indexAntriandpd');
+            Route::get('/insert-queue-dpd/{id}', [AduanDpdRiController::class, 'insertqueuedpd'])->name('insertqueuedpd');
+            Route::post('/update-queue/dpd/{id}', [AduanDpdRiController::class, 'updatequeuedpd'])->name('updatequeuedpd');
+            Route::get('/edit-dpd/{id}', [AduanDpdRiController::class, 'editaduandpd'])->name('editaduandpd');
+            Route::post('/update/dpd/{id}', [AduanDpdRiController::class, 'updateAduandpd'])->name('updateAduandpd');
+            Route::get('/aduan-dpd-ri/cetak', [AduanDpdRiController::class, 'cetak'])->name('aduan.dpd-ri.cetak');
 
-            Route::get('/suratps', [AdminController::class, 'indexAntrianps'])->name('indexAntrianps');
-            Route::get('/edit-suratps/{id}', [AdminController::class, 'editsuratps'])->name('editsuratps');
-            Route::post('/updatesuratps/{id}', [AdminController::class, 'updatesuratps'])->name('updatesuratps');
-            Route::get('/edit-suratpsdone/{id}', [AdminController::class, 'editsuratpsdone'])->name('editsuratpsdone');
-            Route::post('/updatesuratpsdone/{id}', [AdminController::class, 'updatepsdone'])->name('updatepsdone');
+            Route::resource('aduan_dpr_ri', AduanDprRiController::class);
+            Route::get('/aduan/dpr', [AduanDprRiController::class, 'indexAntrianDPR'])->name('indexAntrianDPR');
+            Route::get('/insert-queue-dpr/{id}', [AduanDprRiController::class, 'insertqueuedpr'])->name('insertqueuedpr');
+            Route::post('/update-queue/dpr/{id}', [AduanDprRiController::class, 'updatequeuedpr'])->name('updatequeuedpr');
+            Route::get('/edit-dpr/{id}', [AduanDprRiController::class, 'editaduandpr'])->name('editaduandpr');
+            Route::post('/update/dpr/{id}', [AduanDprRiController::class, 'updateAduandpr'])->name('updateAduandpr');
+            Route::get('/aduan-dpr-ri/cetak', [AduanDprRiController::class, 'cetak'])->name('aduan.dpr-ri.cetak');
 
-            Route::get('/suratpr', [AdminController::class, 'indexAntrianpr'])->name('indexAntrianpr');
-            Route::get('/edit-suratpr/{id}', [AdminController::class, 'editsuratpr'])->name('editsuratpr');
-            Route::post('/updatesuratpr/{id}', [AdminController::class, 'updatesuratpr'])->name('updatesuratpr');
-            Route::get('/edit-suratprdone/{id}', [AdminController::class, 'editsuratprdone'])->name('editsuratprdone');
-            Route::post('/updatesuratprdone/{id}', [AdminController::class, 'updateprdone'])->name('updateprdone');
+            Route::resource('aduan_dprd_provinsi', AduanDprdProvinsiController::class);
+            Route::get('/aduan/dprd-provinsi', [AduanDprdProvinsiController::class, 'indexAntrianDprdProvinsi'])->name('indexAntrianDprdProvinsi');
+            Route::get('/insert-queue-dprd-provinsi/{id}', [AduanDprdProvinsiController::class, 'insertqueuedprdprovinsi'])->name('insertqueuedprdprovinsi');
+            Route::post('/update-queue/dprd-provinsi/{id}', [AduanDprdProvinsiController::class, 'updatequeuedprdprovinsi'])->name('updatequeuedprdprovinsi');
+            Route::get('/edit-dprd-provinsi/{id}', [AduanDprdProvinsiController::class, 'editaduandprdprovinsi'])->name('editaduandprdprovinsi');
+            Route::post('/update/dprd-provinsi/{id}', [AduanDprdProvinsiController::class, 'updateAduandprdprovinsi'])->name('updateAduandprdprovinsi');
+            Route::get('/aduan-dprd-provinsi/cetak', [AduanDprdProvinsiController::class, 'cetak'])->name('aduan.dprd-provinsi.cetak');
 
-            Route::get('/suratot', [AdminController::class, 'indexAntrianot'])->name('indexAntrianot');
-            Route::get('/edit-suratot/{id}', [AdminController::class, 'editsuratot'])->name('editsuratot');
-            Route::post('/updatesuratot/{id}', [AdminController::class, 'updatesuratot'])->name('updatesuratot');
-            Route::get('/edit-suratotdone/{id}', [AdminController::class, 'editsuratotdone'])->name('editsuratotdone');
-            Route::post('/updatesuratotdone/{id}', [AdminController::class, 'updateotdone'])->name('updateotdone');
+            Route::resource('aduan_dprd_kabupaten', AduanDprdKabupatenController::class);
+            Route::get('/aduan/dprd-kabupaten-kota', [AduanDprdKabupatenController::class, 'indexAntrianDprdKabupaten'])->name('indexAntrianDprdKabupaten');
+            Route::get('/insert-queue-dprd-kabupaten-kota/{id}', [AduanDprdKabupatenController::class, 'insertqueuedprdkabupaten'])->name('insertqueuedprdkabupaten');
+            Route::post('/update-queue/dprd-kabupaten-kota/{id}', [AduanDprdKabupatenController::class, 'updatequeuedprdkabupaten'])->name('updatequeuedprdkabupaten');
+            Route::get('/edit-dprd-kabupaten-kota/{id}', [AduanDprdKabupatenController::class, 'editaduandprdkabupaten'])->name('editaduandprdkabupaten');
+            Route::post('/update/dprd-kabupaten-kota/{id}', [AduanDprdKabupatenController::class, 'updateAduandprdkabupaten'])->name('updateAduandprdkabupaten');
+            Route::get('/aduan-dprd-kabupaten/cetak', [AduanDprdKabupatenController::class, 'cetak'])->name('aduan.dprd-kabupaten.cetak');
 
-            Route::get('/suratka', [AdminController::class, 'indexAntrianka'])->name('indexAntrianka');
-            Route::get('/edit-suratka/{id}', [AdminController::class, 'editsuratka'])->name('editsuratka');
-            Route::post('/updatesuratka/{id}', [AdminController::class, 'updatesuratka'])->name('updatesuratka');
-            Route::get('/edit-suratkadone/{id}', [AdminController::class, 'editsuratkadone'])->name('editsuratkadone');
-            Route::post('/updatesuratkadone/{id}', [AdminController::class, 'updatekadone'])->name('updatekadone');
-
-            Route::get('/suratku', [AdminController::class, 'indexAntrianku'])->name('indexAntrianku');
-            Route::get('/edit-suratku/{id}', [AdminController::class, 'editsuratku'])->name('editsuratku');
-            Route::post('/updatesuratku/{id}', [AdminController::class, 'updatesuratku'])->name('updatesuratku');
-            Route::get('/edit-suratkudone/{id}', [AdminController::class, 'editsuratkudone'])->name('editsuratkudone');
-            Route::post('/updatesuratkudone/{id}', [AdminController::class, 'updatekudone'])->name('updatekudone');
-
-            Route::get('/suratpl', [AdminController::class, 'indexAntrianpl'])->name('indexAntrianpl');
-            Route::get('/edit-suratpl/{id}', [AdminController::class, 'editsuratpl'])->name('editsuratpl');
-            Route::post('/updatesuratpl/{id}', [AdminController::class, 'updatesuratpl'])->name('updatesuratpl');
-            Route::get('/edit-suratpldone/{id}', [AdminController::class, 'editsuratpldone'])->name('editsuratpldone');
-            Route::post('/updatesuratpldone/{id}', [AdminController::class, 'updatepldone'])->name('updatepldone');
-
-            Route::get('/surathk', [AdminController::class, 'indexAntrianhk'])->name('indexAntrianhk');
-            Route::get('/edit-surathk/{id}', [AdminController::class, 'editsurathk'])->name('editsurathk');
-            Route::post('/updatesurathk/{id}', [AdminController::class, 'updatesurathk'])->name('updatesurathk');
-            Route::get('/edit-surathkdone/{id}', [AdminController::class, 'editsurathkdone'])->name('editsurathkdone');
-            Route::post('/updatesurathkdone/{id}', [AdminController::class, 'updatehkdone'])->name('updatehkdone');
-
-            Route::get('/surathm', [AdminController::class, 'indexAntrianhm'])->name('indexAntrianhm');
-            Route::get('/edit-surathm/{id}', [AdminController::class, 'editsurathm'])->name('editsurathm');
-            Route::post('/updatesurathm/{id}', [AdminController::class, 'updatesurathm'])->name('updatesurathm');
-            Route::get('/edit-surathmdone/{id}', [AdminController::class, 'editsurathmdone'])->name('editsurathmdone');
-            Route::post('/updatesurathmdone/{id}', [AdminController::class, 'updatehmdone'])->name('updatehmdone');
-
-            Route::get('/suratkp', [AdminController::class, 'indexAntriankp'])->name('indexAntriankp');
-            Route::get('/edit-suratkp/{id}', [AdminController::class, 'editsuratkp'])->name('editsuratkp');
-            Route::post('/updatesuratkp/{id}', [AdminController::class, 'updatesuratkp'])->name('updatesuratkp');
-            Route::get('/edit-suratkpdone/{id}', [AdminController::class, 'editsuratkpdone'])->name('editsuratkpdone');
-            Route::post('/updatesuratkpdone/{id}', [AdminController::class, 'updatekpdone'])->name('updatekpdone');
-
-            Route::get('/suratrt', [AdminController::class, 'indexAntrianrt'])->name('indexAntrianrt');
-            Route::get('/edit-suratrt/{id}', [AdminController::class, 'editsuratrt'])->name('editsuratrt');
-            Route::post('/updatesuratrt/{id}', [AdminController::class, 'updatesuratrt'])->name('updatesuratrt');
-            Route::get('/edit-suratrtdone/{id}', [AdminController::class, 'editsuratrtdone'])->name('editsuratrtdone');
-            Route::post('/updatesurartpdone/{id}', [AdminController::class, 'updatertdone'])->name('updatertdone');
-
-            Route::get('/suratpw', [AdminController::class, 'indexAntrianpw'])->name('indexAntrianpw');
-            Route::get('/edit-suratpw/{id}', [AdminController::class, 'editsuratpw'])->name('editsuratpw');
-            Route::post('/updatesuratpw/{id}', [AdminController::class, 'updatesuratpw'])->name('updatesuratpw');
-            Route::get('/edit-suratpwdone/{id}', [AdminController::class, 'editsuratpwdone'])->name('editsuratpwdone');
-            Route::post('/updatesuratpwdone/{id}', [AdminController::class, 'updatepwdone'])->name('updatepwdone');
-    
-            Route::get('/suratti', [AdminController::class, 'indexAntrianti'])->name('indexAntrianti');
-            Route::get('/edit-suratti/{id}', [AdminController::class, 'editsuratti'])->name('editsuratti');
-            Route::post('/updatesuratti/{id}', [AdminController::class, 'updatesuratti'])->name('updatesuratti');
-            Route::get('/edit-surattidone/{id}', [AdminController::class, 'editsurattidone'])->name('editsurattidone');
-            Route::post('/updatesurattidone/{id}', [AdminController::class, 'updatetidone'])->name('updatetidone');
+           
         });
         // ... tambahkan rute admin lainnya di sini
     });
@@ -144,50 +148,24 @@ Route::middleware('auth')->group(function() {
        
         Route::get('/user', [TenagaahliController::class, 'index'])->name('tenagaahliDashboard');
         Route::get('/create-surat', [TenagaahliController::class, 'createsurat'])->name('createsurat');
+        Route::get('/create-aduan', [TenagaahliController::class, 'createaduan'])->name('createaduan');
 
-        Route::get('/show-suratpm/{id}', [TenagaahliController::class, 'showsuratpmuser'])->name('showsuratpmuser');
-        Route::get('/create-surat-pm', [TenagaahliController::class, 'createsuratpm'])->name('createsuratpm');
-        Route::post('/store-surat-pm', [TenagaahliController::class, 'storesuratpm'])->name('storesuratpm');
+        Route::resource('aduan_presiden_wakil_presiden', AduanPresidenWakilPresidenController::class);
+        Route::get('/show-aduan-presiden-wakil/{id}', [TenagaahliController::class, 'showaduanPresidenWakil'])->name('showaduanPresidenWakil');
+
+        Route::resource('aduan_dpd_ri', AduanDpdRiController::class);
+        Route::get('/show-aduan-dpd/{id}', [TenagaahliController::class, 'showaduanDpd'])->name('showaduanDpd');
+
+        Route::resource('aduan_dpr_ri', AduanDprRiController::class);
+        Route::get('/show-aduan-dpr/{id}', [TenagaahliController::class, 'showaduanDpr'])->name('showaduanDpr');
+
+        Route::resource('aduan_dprd_provinsi', AduanDprdProvinsiController::class);
+        Route::get('/show-aduan-dprd-provinsi/{id}', [TenagaahliController::class, 'showaduanDprdProvinsi'])->name('showaduanDprdProvinsi');
+
+        Route::resource('aduan_dprd_kabupaten', AduanDprdKabupatenController::class);
+        Route::get('/show-aduan-dprd-kabupaten/{id}', [TenagaahliController::class, 'showaduanDprdKabupaten'])->name('showaduanDprdKabupaten');
+
        
-        Route::get('/create-surat-pp', [TenagaahliController::class, 'createsuratpp'])->name('createsuratpp');
-        Route::post('/store-surat-pp', [TenagaahliController::class, 'storesuratpp'])->name('storesuratpp');
-
-        Route::get('/create-surat-ps', [TenagaahliController::class, 'createsuratps'])->name('createsuratps');
-        Route::post('/store-surat-ps', [TenagaahliController::class, 'storesuratps'])->name('storesuratps');
-
-        Route::get('/create-surat-pr', [TenagaahliController::class, 'createsuratpr'])->name('createsuratpr');
-        Route::post('/store-surat-pr', [TenagaahliController::class, 'storesuratpr'])->name('storesuratpr');
-
-        Route::get('/create-surat-ot', [TenagaahliController::class, 'createsuratot'])->name('createsuratot');
-        Route::post('/store-surat-ot', [TenagaahliController::class, 'storesuratot'])->name('storesuratot');
-
-        Route::get('/create-surat-ka', [TenagaahliController::class, 'createsuratka'])->name('createsuratka');
-        Route::post('/store-surat-ka', [TenagaahliController::class, 'storesuratka'])->name('storesuratka');
-
-        Route::get('/create-surat-ku', [TenagaahliController::class, 'createsuratku'])->name('createsuratku');
-        Route::post('/store-surat-ku', [TenagaahliController::class, 'storesuratku'])->name('storesuratku');
-
-        Route::get('/create-surat-pl', [TenagaahliController::class, 'createsuratpl'])->name('createsuratpl');
-        Route::post('/store-surat-pl', [TenagaahliController::class, 'storesuratpl'])->name('storesuratpl');
-
-        Route::get('/create-surat-hk', [TenagaahliController::class, 'createsurathk'])->name('createsurathk');
-        Route::post('/store-surat-hk', [TenagaahliController::class, 'storesurathk'])->name('storesurathk');
-
-        Route::get('/create-surat-hm', [TenagaahliController::class, 'createsurathm'])->name('createsurathm');
-        Route::post('/store-surat-hm', [TenagaahliController::class, 'storesurathm'])->name('storesurathm');
-
-        Route::get('/create-surat-kp', [TenagaahliController::class, 'createsuratkp'])->name('createsuratkp');
-        Route::post('/store-surat-kp', [TenagaahliController::class, 'storesuratkp'])->name('storesuratkp');
-        
-        Route::get('/create-surat-rt', [TenagaahliController::class, 'createsuratrt'])->name('createsuratrt');
-        Route::post('/store-surat-rt', [TenagaahliController::class, 'storesuratrt'])->name('storesuratrt');
-
-        Route::get('/create-surat-pw', [TenagaahliController::class, 'createsuratpw'])->name('createsuratpw');
-        Route::post('/store-surat-pw', [TenagaahliController::class, 'storesuratpw'])->name('storesuratpw');
-
-        Route::get('/create-surat-ti', [TenagaahliController::class, 'createsuratti'])->name('createsuratti');
-        Route::post('/store-surat-ti', [TenagaahliController::class, 'storesuratti'])->name('storesuratti');
-
         Route::get('/show/{id}/share-link', [TenagaahliController::class, 'shareLink'])->name('shareLink');
         Route::get('/show/{id}', [TenagaahliController::class, 'show'])->name('showProject');
         Route::get('/show/step/{id}', [TenagaahliController::class, 'showStep'])->name('stepProject');

@@ -18,6 +18,14 @@
                     @csrf <!-- Untuk Laravel, gunakan csrf token -->
 
                     <div class="mb-4">
+                        <label for="partai" class="block text-sm font-medium text-gray-700">Partai:</label>
+                        <select id="partai" name="partai" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            @foreach($partais as $partai)
+                                <option value="{{ $partai->id }}">{{ $partai->nama_partai }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-4">
                         <label for="tanggal" class="block text-sm font-medium text-gray-700">Tanggal:</label>
                         <input type="date" id="tanggal" name="tanggal" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                     </div>

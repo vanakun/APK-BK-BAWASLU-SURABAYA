@@ -3,6 +3,13 @@
 namespace App\Http\Controllers\Tenagaahli;
 
 use App\Http\Controllers\Controller;
+use App\Models\AduanDpdRi;
+use App\Models\AduanDprdKabupaten;
+use App\Models\AduanDprdProvinsi;
+use App\Models\AduanDprRi;
+use App\Models\AduanPresidenWakilPresiden;
+use App\Models\Partai;
+use App\Models\PresidenWakilPresiden;
 use App\Models\SuratHubunganMasyarakat;
 use App\Models\SuratHukum;
 use App\Models\SuratKepegawaian;
@@ -18,6 +25,8 @@ use App\Models\SuratPerencanaan;
 use App\Models\SuratPerlengkapan;
 use App\Models\SuratPersuratanDanKearsipan;
 use App\Models\SuratTeknologiInformasi;
+use App\Models\TahunPemilihan;
+use App\Models\TahunPemilihanAktif;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,52 +35,82 @@ class TenagaahliController extends Controller
 {
    
 
-public function index()
+public function index(Request $request)
 {
     // Ambil ID pengguna yang saat ini masuk
     $userId = Auth::id();
 
-    // Cari surat pengawasan pemilu yang terkait dengan pengguna yang saat ini masuk
-    $suratPengawasanPemilus = SuratPengawasanPemilu::where('user_id', $userId)->paginate(5);
+    $aduanPresidenWakil = AduanPresidenWakilPresiden::where('user_id', $userId)->paginate(5);
 
-    $suratpp = SuratPenangananPelanggaranSengketaPemilu::where('user_id', $userId)->paginate(5);
+    $aduanDpdRi = AduanDpdRi::where('user_id', $userId)->paginate(5);
 
-    $suratps = SuratPenyelesaianSengketa::where('user_id', $userId)->paginate(5);
+    $aduanDprRi = AduanDprRi::where('user_id', $userId)->paginate(5);
 
-    $suratpr = SuratPerencanaan::where('user_id', $userId)->paginate(5);
+    $aduanDprdProvinsi = AduanDprdProvinsi::where('user_id', $userId)->paginate(5);
 
-    $suratot = SuratOrganisasiDanTataLaksana::where('user_id', $userId)->paginate(5);
+    $aduanDprdKabupaten = AduanDprdKabupaten::where('user_id', $userId)->paginate(5);
     
-    $suratka = SuratPersuratanDanKearsipan::where('user_id', $userId)->paginate(5);
-    // Kirim data ke tampilan
-    $suratku = SuratKeuangan::where('user_id', $userId)->paginate(5);
-
-    $suratpl = SuratPerlengkapan::where('user_id', $userId)->paginate(5);
-
-    $surathm = SuratHubunganMasyarakat::where('user_id', $userId)->paginate(5);
-
-    $suratkp = SuratKepegawaian::where('user_id', $userId)->paginate(5);
     
-    $suratrt = SuratKetatausahaanDanKerumahtangaan::where('user_id', $userId)->paginate(5);
     
-    $surathk = SuratHukum::where('user_id', $userId)->paginate(5);
 
-    $suratpw = SuratPengawasan::where('user_id', $userId)->paginate(5);
 
-    $suratti = SuratTeknologiInformasi::where('user_id', $userId)->paginate(5);
-    //dd($suratPengawasanPemilus);
-    return view('pages.user.index', compact('suratti','suratpw','surathk','suratPengawasanPemilus','suratpp','suratps','suratpr','suratot','suratka','suratku','suratpl',"surathm",'suratkp','suratrt'));
+   
+    
+    return view('pages.user.index', compact('aduanDprdKabupaten','aduanDprdProvinsi','aduanDprRi','aduanDpdRi','aduanPresidenWakil'));
 }
 
 
-    public function createsurat()
+    public function createaduan()
     {
-        return view ('pages/user/listsurat');
+        return view ('pages/user/listaduan');
     }
+
+    public function showaduanPresidenWakil($id)
+    {
+        $aduan = AduanPresidenWakilPresiden::findOrFail($id);
+        return view('pages.user.aduan.presiden-wakil.show', compact('aduan'));
+    }
+
+    public function showaduanDpd($id)
+    {
+        $aduan = AduanDpdRi::findOrFail($id);
+        return view('pages.user.aduan.dpd-ri.show', compact('aduan'));
+    }
+
+    public function showaduanDpr($id)
+    {
+        $aduan = AduanDprRi::findOrFail($id);
+        return view('pages.user.aduan.dpr-ri.show', compact('aduan'));
+    }
+
+    public function showaduanDprdProvinsi($id)
+    {
+        $aduan = AduanDprdProvinsi::findOrFail($id);
+        return view('pages.user.aduan.dpr-ri.show', compact('aduan'));
+    }
+
+    public function showaduanDprdKabupaten($id)
+    {
+        $aduan = AduanDprdKabupaten::findOrFail($id);
+        return view('pages.user.aduan.dprd-kabupaten.show', compact('aduan'));
+    }
+
 
     public function createsuratpm()
     {
-        return view ('pages/user/surat/createpm');
+
+        $activeYear = TahunPemilihanAktif::first();
+
+        if ($activeYear) {
+            $partais = Partai::whereHas('tahunPemilihan', function($query) use ($activeYear) {
+                $query->where('tahun_pemilihan', $activeYear->tahun_pemilihan_aktif);
+            })->get();
+        } else {
+            $partais = collect();
+        }
+
+       // dd($partais, $activeYear);
+        return view ('pages/user/surat/createpm', compact('partais', 'activeYear'));
     }
 
     public function createsuratpp()

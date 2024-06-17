@@ -11,7 +11,7 @@
         <div class="content">
             @yield('subcontent')
             <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
-                <h2 class="text-lg font-medium mr-auto">Antrian Surat</h2>
+                <h2 class="text-lg font-medium mr-auto">Antrian Aduan</h2>
             </div>
             <div class="intro-y grid grid-cols-12 gap-6 mt-5">
                 <!-- BEGIN: Blog Layout -->
@@ -26,595 +26,206 @@
                     
                             </div>
                             <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN SURAT PENGAWASAN PEMILU (PM)</span>
+                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN ADUAN PRESIDEN DAN WAKIL PRESIDEN</span>
                                 <a href="" class="block font-medium text-xl mt-3"> </a>
                             </div>
                         </div>
-                        <div class="p-5 text-slate-600 dark:text-slate-500"></div>
-                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
-                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianpm') }}">
+                        <div class="p-5 text-slate-600 dark:text-slate-500"> 
+                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianPresidenwakil') }}">
                                 <div><i data-feather="eye" class="w-4 h-4"></i></div>
-                                <div class="ml-1">View Details</div>
-                            </a>
-                            
-                            <a href="{{ route('cetakpm') }}" class="intro-x w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white ml-2 tooltip" title="Cetak Klasifikasi PM">
-                                <i data-feather="share" class="w-3 h-3"></i>
-                            </a>
-                        </div>
-                    </div>
-                
-                    <div class="intro-y col-span-12 md:col-span-6 box zoom-in">
-                        <div class="h-[320px] before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black/90 before:to-black/10 image-fit">
-                            <img alt="Tinker Tailwind HTML Admin Template" class="rounded-t-md" src="{{ asset('dist/images/bg_surat/download.jpg') }}">
-                            <div class="absolute w-full flex items-center px-5 pt-6 z-10">
-                                
-                                <div class="ml-3 text-white mr-auto">
-                                </div>
-                                <div class="dropdown ml-3">
-                                    <a href="javascript:;" class="bg-white/20 dropdown-toggle w-8 h-8 flex items-center justify-center rounded-full" aria-expanded="false" data-tw-toggle="dropdown">
-                                        <i data-feather="more-vertical" class="w-4 h-4 text-white"></i>
-                                    </a>
-                                    <div class="dropdown-menu w-40">
-                                        <ul class="dropdown-content">
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="edit-2" class="w-4 h-4 mr-2"></i> Edit Post
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete Post
-                                                </a>
-                                            </li>
-                                        </ul>
+                                <div class="ml-4">View Details</div>
+                            </a></div>
+                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <form action="{{ route('aduan.presiden.cetak') }}" method="GET" class="form-inline">
+                                            @csrf
+                                            <div class="form-group mr-2">
+                                                <label for="tahun_pemilihan_id" class="mr-2">Tahun Pemilihan:</label>
+                                                <select name="tahun_pemilihan_id" id="tahun_pemilihan_id" class="form-control" required style="width: auto;">
+                                                    @foreach($tahunPemilihans as $tahunPemilihan)
+                                                        <option value="{{ $tahunPemilihan->tahun_pemilihan }}">{{ $tahunPemilihan->tahun_pemilihan }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i data-feather="share" class="w-4 h-4 mr-1"></i> Cetak PDF
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
-                            <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN SURAT PENANGANAN PELANGGARAN DAN SENGKETA PEMILU (PP)</span>
-                                <a href="" class="block font-medium text-xl mt-3"> </a>
-                            </div>
-                        </div>
-                        <div class="p-5 text-slate-600 dark:text-slate-500"></div>
-                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
-                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianpp') }}">
-                                <div><i data-feather="eye" class="w-4 h-4"></i></div>
-                                <div class="ml-1">View Details</div>
-                            </a>
-                            
-                            <a href="" class="intro-x w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white ml-2 tooltip" title="Cetak PDF">
-                                <i data-feather="share" class="w-3 h-3"></i>
-                            </a>
                         </div>
                     </div>
                     <div class="intro-y col-span-12 md:col-span-6 box zoom-in">
                         <div class="h-[320px] before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black/90 before:to-black/10 image-fit">
                             <img alt="Tinker Tailwind HTML Admin Template" class="rounded-t-md" src="{{ asset('dist/images/bg_surat/download.jpg') }}">
                             <div class="absolute w-full flex items-center px-5 pt-6 z-10">
-                                
                                 <div class="ml-3 text-white mr-auto">
-                                </div>
-                                <div class="dropdown ml-3">
-                                    <a href="javascript:;" class="bg-white/20 dropdown-toggle w-8 h-8 flex items-center justify-center rounded-full" aria-expanded="false" data-tw-toggle="dropdown">
-                                        <i data-feather="more-vertical" class="w-4 h-4 text-white"></i>
-                                    </a>
-                                    <div class="dropdown-menu w-40">
-                                        <ul class="dropdown-content">
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="edit-2" class="w-4 h-4 mr-2"></i> Edit Post
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete Post
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
                                 </div>
                             </div>
                             <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN SURAT PENYELESAIAN SENGKETA (PS)</span>
-                                <a href="" class="block font-medium text-xl mt-3"> </a>
+                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN ADUAN DPD - RI</span>
+                                <a href="{{ route('indexAntriandpd') }}" class="block font-medium text-xl mt-3"> </a>
                             </div>
                         </div>
-                        <div class="p-5 text-slate-600 dark:text-slate-500"></div>
-                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
-                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianps') }}">
+                        <div class="p-5 text-slate-600 dark:text-slate-500"> 
+                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntriandpd') }}">
                                 <div><i data-feather="eye" class="w-4 h-4"></i></div>
-                                <div class="ml-1">View Details</div>
-                            </a>
-                            
-                            <a href="" class="intro-x w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white ml-2 tooltip" title="Cetak PDF">
-                                <i data-feather="share" class="w-3 h-3"></i>
+                                <div class="ml-4">View Details</div>
                             </a>
                         </div>
+                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <form action="{{ route('aduan.dpd-ri.cetak') }}" method="GET" class="form-inline">
+                                            @csrf
+                                            <div class="form-group mr-2">
+                                                <label for="tahun_pemilihan_id" class="mr-2">Tahun Pemilihan:</label>
+                                                <select name="tahun_pemilihan_id" id="tahun_pemilihan_id" class="form-control" required style="width: auto;">
+                                                    @foreach($tahunPemilihans as $tahunPemilihan)
+                                                        <option value="{{ $tahunPemilihan->tahun_pemilihan }}">{{ $tahunPemilihan->tahun_pemilihan }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i data-feather="share" class="w-4 h-4 mr-1"></i> Cetak PDF
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="intro-y col-span-12 md:col-span-6 box zoom-in">
                         <div class="h-[320px] before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black/90 before:to-black/10 image-fit">
                             <img alt="Tinker Tailwind HTML Admin Template" class="rounded-t-md" src="{{ asset('dist/images/bg_surat/download.jpg') }}">
                             <div class="absolute w-full flex items-center px-5 pt-6 z-10">
-                                
                                 <div class="ml-3 text-white mr-auto">
-                                </div>
-                                <div class="dropdown ml-3">
-                                    <a href="javascript:;" class="bg-white/20 dropdown-toggle w-8 h-8 flex items-center justify-center rounded-full" aria-expanded="false" data-tw-toggle="dropdown">
-                                        <i data-feather="more-vertical" class="w-4 h-4 text-white"></i>
-                                    </a>
-                                    <div class="dropdown-menu w-40">
-                                        <ul class="dropdown-content">
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="edit-2" class="w-4 h-4 mr-2"></i> Edit Post
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete Post
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
                                 </div>
                             </div>
                             <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN SURAT PERENCANAAN (PR)</span>
-                                <a href="" class="block font-medium text-xl mt-3"> </a>
+                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN ADUAN DPR - RI</span>
+                                <a href="{{ route('indexAntrianDPR') }}" class="block font-medium text-xl mt-3"> </a>
                             </div>
                         </div>
-                        <div class="p-5 text-slate-600 dark:text-slate-500"></div>
-                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
-                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianpr') }}">
+                        <div class="p-5 text-slate-600 dark:text-slate-500"> 
+                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianDPR') }}">
                                 <div><i data-feather="eye" class="w-4 h-4"></i></div>
-                                <div class="ml-1">View Details</div>
-                            </a>
-                            
-                            <a href="" class="intro-x w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white ml-2 tooltip" title="Cetak PDF">
-                                <i data-feather="share" class="w-3 h-3"></i>
+                                <div class="ml-4">View Details</div>
                             </a>
                         </div>
+                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <form action="{{ route('aduan.dpr-ri.cetak') }}" method="GET" class="form-inline">
+                                            @csrf
+                                            <div class="form-group mr-2">
+                                                <label for="tahun_pemilihan_id" class="mr-2">Tahun Pemilihan:</label>
+                                                <select name="tahun_pemilihan_id" id="tahun_pemilihan_id" class="form-control" required style="width: auto;">
+                                                    @foreach($tahunPemilihans as $tahunPemilihan)
+                                                        <option value="{{ $tahunPemilihan->tahun_pemilihan }}">{{ $tahunPemilihan->tahun_pemilihan }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i data-feather="share" class="w-4 h-4 mr-1"></i> Cetak PDF
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    
                     <div class="intro-y col-span-12 md:col-span-6 box zoom-in">
                         <div class="h-[320px] before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black/90 before:to-black/10 image-fit">
                             <img alt="Tinker Tailwind HTML Admin Template" class="rounded-t-md" src="{{ asset('dist/images/bg_surat/download.jpg') }}">
                             <div class="absolute w-full flex items-center px-5 pt-6 z-10">
-                                
                                 <div class="ml-3 text-white mr-auto">
-                                </div>
-                                <div class="dropdown ml-3">
-                                    <a href="javascript:;" class="bg-white/20 dropdown-toggle w-8 h-8 flex items-center justify-center rounded-full" aria-expanded="false" data-tw-toggle="dropdown">
-                                        <i data-feather="more-vertical" class="w-4 h-4 text-white"></i>
-                                    </a>
-                                    <div class="dropdown-menu w-40">
-                                        <ul class="dropdown-content">
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="edit-2" class="w-4 h-4 mr-2"></i> Edit Post
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete Post
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
                                 </div>
                             </div>
                             <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN SURAT ORGANISASI DAN TATA LAKSANA (OT)</span>
-                                <a href="" class="block font-medium text-xl mt-3"> </a>
+                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN ADUAN DPRD PROVINSI</span>
+                                <a href="{{ route('indexAntrianDprdProvinsi') }}" class="block font-medium text-xl mt-3"> </a>
                             </div>
                         </div>
-                        <div class="p-5 text-slate-600 dark:text-slate-500"></div>
-                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
-                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianot') }}">
+                        <div class="p-5 text-slate-600 dark:text-slate-500"> 
+                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianDprdProvinsi') }}">
                                 <div><i data-feather="eye" class="w-4 h-4"></i></div>
-                                <div class="ml-1">View Details</div>
-                            </a>
-                            
-                            <a href="" class="intro-x w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white ml-2 tooltip" title="Cetak PDF">
-                                <i data-feather="share" class="w-3 h-3"></i>
+                                <div class="ml-4">View Details</div>
                             </a>
                         </div>
+                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <form action="{{ route('aduan.dprd-provinsi.cetak') }}" method="GET" class="form-inline">
+                                            @csrf
+                                            <div class="form-group mr-2">
+                                                <label for="tahun_pemilihan_id" class="mr-2">Tahun Pemilihan:</label>
+                                                <select name="tahun_pemilihan_id" id="tahun_pemilihan_id" class="form-control" required style="width: auto;">
+                                                    @foreach($tahunPemilihans as $tahunPemilihan)
+                                                        <option value="{{ $tahunPemilihan->tahun_pemilihan }}">{{ $tahunPemilihan->tahun_pemilihan }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i data-feather="share" class="w-4 h-4 mr-1"></i> Cetak PDF
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="intro-y col-span-12 md:col-span-6 box zoom-in">
                         <div class="h-[320px] before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black/90 before:to-black/10 image-fit">
                             <img alt="Tinker Tailwind HTML Admin Template" class="rounded-t-md" src="{{ asset('dist/images/bg_surat/download.jpg') }}">
                             <div class="absolute w-full flex items-center px-5 pt-6 z-10">
-                                
                                 <div class="ml-3 text-white mr-auto">
-                                </div>
-                                <div class="dropdown ml-3">
-                                    <a href="javascript:;" class="bg-white/20 dropdown-toggle w-8 h-8 flex items-center justify-center rounded-full" aria-expanded="false" data-tw-toggle="dropdown">
-                                        <i data-feather="more-vertical" class="w-4 h-4 text-white"></i>
-                                    </a>
-                                    <div class="dropdown-menu w-40">
-                                        <ul class="dropdown-content">
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="edit-2" class="w-4 h-4 mr-2"></i> Edit Post
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete Post
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
                                 </div>
                             </div>
                             <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN SURAT PERSURATAN DAN KEARSIPAN (KA)</span>
-                                <a href="" class="block font-medium text-xl mt-3"> </a>
+                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN ADUAN DPRD KABUPATEN/KOTA</span>
+                                <a href="{{ route('indexAntrianDprdKabupaten') }}" class="block font-medium text-xl mt-3"> </a>
                             </div>
                         </div>
-                        <div class="p-5 text-slate-600 dark:text-slate-500"></div>
-                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
-                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianka') }}">
+                        <div class="p-5 text-slate-600 dark:text-slate-500"> 
+                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianDprdKabupaten') }}">
                                 <div><i data-feather="eye" class="w-4 h-4"></i></div>
-                                <div class="ml-1">View Details</div>
-                            </a>
-                            
-                            <a href="" class="intro-x w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white ml-2 tooltip" title="Cetak PDF">
-                                <i data-feather="share" class="w-3 h-3"></i>
+                                <div class="ml-4">View Details</div>
                             </a>
                         </div>
-                    </div>
-                    <div class="intro-y col-span-12 md:col-span-6 box zoom-in">
-                        <div class="h-[320px] before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black/90 before:to-black/10 image-fit">
-                            <img alt="Tinker Tailwind HTML Admin Template" class="rounded-t-md" src="{{ asset('dist/images/bg_surat/download.jpg') }}">
-                            <div class="absolute w-full flex items-center px-5 pt-6 z-10">
-                                
-                                <div class="ml-3 text-white mr-auto">
-                                </div>
-                                <div class="dropdown ml-3">
-                                    <a href="javascript:;" class="bg-white/20 dropdown-toggle w-8 h-8 flex items-center justify-center rounded-full" aria-expanded="false" data-tw-toggle="dropdown">
-                                        <i data-feather="more-vertical" class="w-4 h-4 text-white"></i>
-                                    </a>
-                                    <div class="dropdown-menu w-40">
-                                        <ul class="dropdown-content">
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="edit-2" class="w-4 h-4 mr-2"></i> Edit Post
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete Post
-                                                </a>
-                                            </li>
-                                        </ul>
+                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <form action="{{ route('aduan.dprd-kabupaten.cetak') }}" method="GET" class="form-inline">
+                                            @csrf
+                                            <div class="form-group mr-2">
+                                                <label for="tahun_pemilihan_id" class="mr-2">Tahun Pemilihan:</label>
+                                                <select name="tahun_pemilihan_id" id="tahun_pemilihan_id" class="form-control" required style="width: auto;">
+                                                    @foreach($tahunPemilihans as $tahunPemilihan)
+                                                        <option value="{{ $tahunPemilihan->tahun_pemilihan }}">{{ $tahunPemilihan->tahun_pemilihan }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i data-feather="share" class="w-4 h-4 mr-1"></i> Cetak PDF
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
-                            <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN SURAT KEUANGAN (KU)</span>
-                                <a href="" class="block font-medium text-xl mt-3"> </a>
-                            </div>
-                        </div>
-                        <div class="p-5 text-slate-600 dark:text-slate-500"></div>
-                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
-                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianku') }}">
-                                <div><i data-feather="eye" class="w-4 h-4"></i></div>
-                                <div class="ml-1">View Details</div>
-                            </a>
-                            
-                            <a href="" class="intro-x w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white ml-2 tooltip" title="Cetak PDF">
-                                <i data-feather="share" class="w-3 h-3"></i>
-                            </a>
                         </div>
                     </div>
-                    <div class="intro-y col-span-12 md:col-span-6 box zoom-in">
-                        <div class="h-[320px] before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black/90 before:to-black/10 image-fit">
-                            <img alt="Tinker Tailwind HTML Admin Template" class="rounded-t-md" src="{{ asset('dist/images/bg_surat/download.jpg') }}">
-                            <div class="absolute w-full flex items-center px-5 pt-6 z-10">
-                                
-                                <div class="ml-3 text-white mr-auto">
-                                </div>
-                                <div class="dropdown ml-3">
-                                    <a href="javascript:;" class="bg-white/20 dropdown-toggle w-8 h-8 flex items-center justify-center rounded-full" aria-expanded="false" data-tw-toggle="dropdown">
-                                        <i data-feather="more-vertical" class="w-4 h-4 text-white"></i>
-                                    </a>
-                                    <div class="dropdown-menu w-40">
-                                        <ul class="dropdown-content">
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="edit-2" class="w-4 h-4 mr-2"></i> Edit Post
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete Post
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN SURAT PERLENGKAPAN (PL)</span>
-                                <a href="" class="block font-medium text-xl mt-3"> </a>
-                            </div>
-                        </div>
-                        <div class="p-5 text-slate-600 dark:text-slate-500"></div>
-                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
-                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianpl') }}">
-                                <div><i data-feather="eye" class="w-4 h-4"></i></div>
-                                <div class="ml-1">View Details</div>
-                            </a>
                             
-                            <a href="" class="intro-x w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white ml-2 tooltip" title="Cetak PDF">
-                                <i data-feather="share" class="w-3 h-3"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="intro-y col-span-12 md:col-span-6 box zoom-in">
-                        <div class="h-[320px] before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black/90 before:to-black/10 image-fit">
-                            <img alt="Tinker Tailwind HTML Admin Template" class="rounded-t-md" src="{{ asset('dist/images/bg_surat/download.jpg') }}">
-                            <div class="absolute w-full flex items-center px-5 pt-6 z-10">
-                                
-                                <div class="ml-3 text-white mr-auto">
-                                </div>
-                                <div class="dropdown ml-3">
-                                    <a href="javascript:;" class="bg-white/20 dropdown-toggle w-8 h-8 flex items-center justify-center rounded-full" aria-expanded="false" data-tw-toggle="dropdown">
-                                        <i data-feather="more-vertical" class="w-4 h-4 text-white"></i>
-                                    </a>
-                                    <div class="dropdown-menu w-40">
-                                        <ul class="dropdown-content">
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="edit-2" class="w-4 h-4 mr-2"></i> Edit Post
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete Post
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN SURAT HUKUM (HK)</span>
-                                <a href="" class="block font-medium text-xl mt-3"> </a>
-                            </div>
-                        </div>
-                        <div class="p-5 text-slate-600 dark:text-slate-500"></div>
-                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
-                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianhk') }}">
-                                <div><i data-feather="eye" class="w-4 h-4"></i></div>
-                                <div class="ml-1">View Details</div>
-                            </a>
-                            
-                            <a href="" class="intro-x w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white ml-2 tooltip" title="Cetak PDF">
-                                <i data-feather="share" class="w-3 h-3"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="intro-y col-span-12 md:col-span-6 box zoom-in">
-                        <div class="h-[320px] before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black/90 before:to-black/10 image-fit">
-                            <img alt="Tinker Tailwind HTML Admin Template" class="rounded-t-md" src="{{ asset('dist/images/bg_surat/download.jpg') }}">
-                            <div class="absolute w-full flex items-center px-5 pt-6 z-10">
-                                
-                                <div class="ml-3 text-white mr-auto">
-                                </div>
-                                <div class="dropdown ml-3">
-                                    <a href="javascript:;" class="bg-white/20 dropdown-toggle w-8 h-8 flex items-center justify-center rounded-full" aria-expanded="false" data-tw-toggle="dropdown">
-                                        <i data-feather="more-vertical" class="w-4 h-4 text-white"></i>
-                                    </a>
-                                    <div class="dropdown-menu w-40">
-                                        <ul class="dropdown-content">
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="edit-2" class="w-4 h-4 mr-2"></i> Edit Post
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete Post
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN SURAT HUBUNGAN MASYARAKAT (HM)</span>
-                                <a href="" class="block font-medium text-xl mt-3"> </a>
-                            </div>
-                        </div>
-                        <div class="p-5 text-slate-600 dark:text-slate-500"></div>
-                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
-                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianhm') }}">
-                                <div><i data-feather="eye" class="w-4 h-4"></i></div>
-                                <div class="ml-1">View Details</div>
-                            </a>
-                            
-                            <a href="" class="intro-x w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white ml-2 tooltip" title="Cetak PDF">
-                                <i data-feather="share" class="w-3 h-3"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="intro-y col-span-12 md:col-span-6 box zoom-in">
-                        <div class="h-[320px] before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black/90 before:to-black/10 image-fit">
-                            <img alt="Tinker Tailwind HTML Admin Template" class="rounded-t-md" src="{{ asset('dist/images/bg_surat/download.jpg') }}">
-                            <div class="absolute w-full flex items-center px-5 pt-6 z-10">
-                                
-                                <div class="ml-3 text-white mr-auto">
-                                </div>
-                                <div class="dropdown ml-3">
-                                    <a href="javascript:;" class="bg-white/20 dropdown-toggle w-8 h-8 flex items-center justify-center rounded-full" aria-expanded="false" data-tw-toggle="dropdown">
-                                        <i data-feather="more-vertical" class="w-4 h-4 text-white"></i>
-                                    </a>
-                                    <div class="dropdown-menu w-40">
-                                        <ul class="dropdown-content">
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="edit-2" class="w-4 h-4 mr-2"></i> Edit Post
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete Post
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN SURAT KEPEGAWAIAN (KP)</span>
-                                <a href="" class="block font-medium text-xl mt-3"> </a>
-                            </div>
-                        </div>
-                        <div class="p-5 text-slate-600 dark:text-slate-500"></div>
-                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
-                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntriankp') }}">
-                                <div><i data-feather="eye" class="w-4 h-4"></i></div>
-                                <div class="ml-1">View Details</div>
-                            </a>
-                            
-                            <a href="" class="intro-x w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white ml-2 tooltip" title="Cetak PDF">
-                                <i data-feather="share" class="w-3 h-3"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="intro-y col-span-12 md:col-span-6 box zoom-in">
-                        <div class="h-[320px] before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black/90 before:to-black/10 image-fit">
-                            <img alt="Tinker Tailwind HTML Admin Template" class="rounded-t-md" src="{{ asset('dist/images/bg_surat/download.jpg') }}">
-                            <div class="absolute w-full flex items-center px-5 pt-6 z-10">
-                                
-                                <div class="ml-3 text-white mr-auto">
-                                </div>
-                                <div class="dropdown ml-3">
-                                    <a href="javascript:;" class="bg-white/20 dropdown-toggle w-8 h-8 flex items-center justify-center rounded-full" aria-expanded="false" data-tw-toggle="dropdown">
-                                        <i data-feather="more-vertical" class="w-4 h-4 text-white"></i>
-                                    </a>
-                                    <div class="dropdown-menu w-40">
-                                        <ul class="dropdown-content">
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="edit-2" class="w-4 h-4 mr-2"></i> Edit Post
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete Post
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN SURAT KETATAUSAHAAN DAN KERUMAHTANGGAAN (RT)</span>
-                                <a href="" class="block font-medium text-xl mt-3"> </a>
-                            </div>
-                        </div>
-                        <div class="p-5 text-slate-600 dark:text-slate-500"></div>
-                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
-                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianrt') }}">
-                                <div><i data-feather="eye" class="w-4 h-4"></i></div>
-                                <div class="ml-1">View Details</div>
-                            </a>
-                            
-                            <a href="" class="intro-x w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white ml-2 tooltip" title="Cetak PDF">
-                                <i data-feather="share" class="w-3 h-3"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="intro-y col-span-12 md:col-span-6 box zoom-in">
-                        <div class="h-[320px] before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black/90 before:to-black/10 image-fit">
-                            <img alt="Tinker Tailwind HTML Admin Template" class="rounded-t-md" src="{{ asset('dist/images/bg_surat/download.jpg') }}">
-                            <div class="absolute w-full flex items-center px-5 pt-6 z-10">
-                                
-                                <div class="ml-3 text-white mr-auto">
-                                </div>
-                                <div class="dropdown ml-3">
-                                    <a href="javascript:;" class="bg-white/20 dropdown-toggle w-8 h-8 flex items-center justify-center rounded-full" aria-expanded="false" data-tw-toggle="dropdown">
-                                        <i data-feather="more-vertical" class="w-4 h-4 text-white"></i>
-                                    </a>
-                                    <div class="dropdown-menu w-40">
-                                        <ul class="dropdown-content">
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="edit-2" class="w-4 h-4 mr-2"></i> Edit Post
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete Post
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN SURAT PENGAWASAN (PW)</span>
-                                <a href="" class="block font-medium text-xl mt-3"> </a>
-                            </div>
-                        </div>
-                        <div class="p-5 text-slate-600 dark:text-slate-500"></div>
-                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
-                            <a class="mr-auto flex items-center text-primary"href="{{ route('indexAntrianpw') }}">
-                                <div><i data-feather="eye" class="w-4 h-4"></i></div>
-                                <div class="ml-1">View Details</div>
-                            </a>
-                            
-                            <a href="" class="intro-x w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white ml-2 tooltip" title="Cetak PDF">
-                                <i data-feather="share" class="w-3 h-3"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="intro-y col-span-12 md:col-span-6 box zoom-in">
-                        <div class="h-[320px] before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black/90 before:to-black/10 image-fit">
-                            <img alt="Tinker Tailwind HTML Admin Template" class="rounded-t-md" src="{{ asset('dist/images/bg_surat/download.jpg') }}">
-                            <div class="absolute w-full flex items-center px-5 pt-6 z-10">
-                                
-                                <div class="ml-3 text-white mr-auto">
-                                </div>
-                                <div class="dropdown ml-3">
-                                    <a href="javascript:;" class="bg-white/20 dropdown-toggle w-8 h-8 flex items-center justify-center rounded-full" aria-expanded="false" data-tw-toggle="dropdown">
-                                        <i data-feather="more-vertical" class="w-4 h-4 text-white"></i>
-                                    </a>
-                                    <div class="dropdown-menu w-40">
-                                        <ul class="dropdown-content">
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="edit-2" class="w-4 h-4 mr-2"></i> Edit Post
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="" class="dropdown-item">
-                                                    <i data-feather="trash" class="w-4 h-4 mr-2"></i> Delete Post
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                <span class="bg-white/20 px-2 py-1 rounded">ANTRIAN SURAT TEKNOLOGI INFORMASI (TI)</span>
-                                <a href="" class="block font-medium text-xl mt-3"> </a>
-                            </div>
-                        </div>
-                        <div class="p-5 text-slate-600 dark:text-slate-500"></div>
-                        <div class="flex items-center px-5 py-3 border-t border-slate-200/60 dark:border-darkmode-400">
-                            <a class="mr-auto flex items-center text-primary" href="{{ route('indexAntrianti') }}">
-                                <div><i data-feather="eye" class="w-4 h-4"></i></div>
-                                <div class="ml-1">View Details</div>
-                            </a>
-                            
-                            <a href="" class="intro-x w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white ml-2 tooltip" title="Cetak PDF">
-                                <i data-feather="share" class="w-3 h-3"></i>
-                            </a>
-                        </div>
-                    </div>
                 <!-- END: Blog Layout -->
             </div>
             <div class="mt-6 text-center">

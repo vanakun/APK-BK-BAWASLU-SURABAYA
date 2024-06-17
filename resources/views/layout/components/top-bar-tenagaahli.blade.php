@@ -3,7 +3,7 @@
     <!-- BEGIN: Breadcrumb -->
     <nav aria-label="" class="-intro-x mr-auto hidden sm:flex">
       <a href="/user" class="intro-x flex items-center pl-5 pt-4 mb-4">
-         <img alt="Tinker Tailwind HTML Admin Template" class="h-12"  src="{{ asset('dist/images/inkindo-rv.png') }}">
+         <img alt="Tinker Tailwind HTML Admin Template" class="h-12"  src="{{ asset('dist/images/bawaslu_logo1.png') }}">
           <span class="hidden xl:block text-lg ml-3">
               <!-- INKINDO -->
           </span> 

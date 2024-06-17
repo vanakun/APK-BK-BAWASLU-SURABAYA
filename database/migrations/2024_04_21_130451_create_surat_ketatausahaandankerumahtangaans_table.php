@@ -27,7 +27,7 @@ class CreateSuratKetatausahaandankerumahtangaansTable extends Migration
             $table->string('no_surat')->nullable();
             $table->string('file_surat')->nullable(); // Kolom untuk menyimpan nama file surat, dapat bernilai null
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->enum('status', ['queue','waiting', 'done'])->default('queue');
+            $table->enum('status', ['queue','proces', 'done'])->default('queue');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

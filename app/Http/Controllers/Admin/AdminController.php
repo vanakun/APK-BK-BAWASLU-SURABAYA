@@ -3,6 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AduanDpdRi;
+use App\Models\AduanDprdProvinsi;
+use App\Models\AduanDprRi;
+use App\Models\AduanLog;
+use App\Models\AduanPresidenWakilPresiden;
 use App\Models\SuratHubunganMasyarakat;
 use App\Models\SuratHukum;
 use App\Models\SuratKepegawaian;
@@ -18,6 +23,8 @@ use App\Models\SuratPerencanaan;
 use App\Models\SuratPerlengkapan;
 use App\Models\SuratPersuratanDanKearsipan;
 use App\Models\SuratTeknologiInformasi;
+use App\Models\TahunPemilihan;
+use App\Models\TahunPemilihanAktif;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
@@ -28,267 +35,141 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-    public function index()
-{
-    // Surat Pengawasan Pemilu
-    $suratCountsPM = SuratPengawasanPemilu::select(DB::raw('count(*) as total, status'))
-                        ->groupBy('status')
-                        ->get();
+    public function updatetahunpemilianaktif(Request $request)
+    {
+        $request->validate([
+            'tahun_pemilihan_aktif' => 'required|integer|min:1900|max:' . date('Y')
+        ]);
 
-    $statusespm = $suratCountsPM->pluck('status');
-    $totalspm = $suratCountsPM->pluck('total');
+        // Assuming there is only one active election year at a time
+        $tahunPemilihanAktif = TahunPemilihanAktif::first();
+        if (!$tahunPemilihanAktif) {
+            $tahunPemilihanAktif = new TahunPemilihanAktif();
+        }
+        
+        $tahunPemilihanAktif->tahun_pemilihan_aktif = $request->input('tahun_pemilihan_aktif');
+        $tahunPemilihanAktif->save();
 
-    $lastSuratPM = SuratPengawasanPemilu::orderBy('no_surat', 'desc')->first();
-    $noSuratTerakhirPM = $lastSuratPM ? $lastSuratPM->no_surat : 'Belum ada surat';
+        return view('pages/admin/setting-pemilihan/show');
+    }
+    public function SettingPemilihan(){
+       
+        return view('pages/admin/setting-pemilihan/show');
+    }
 
-    $totalSuratPM = SuratPengawasanPemilu::where('status', 'done')->count();
+    public function SettingTahunPemilihan(){
+       
+        $tahunPemilihan = TahunPemilihan::all();
+        return view('pages/admin/setting-Tahun-pemilihan/show', compact('tahunPemilihan'));
+    }
 
-    // Surat Penanganan Pelanggaran dan Sengketa Pemilu
-    $suratCountsPP = SuratPenangananPelanggaranSengketaPemilu::select(DB::raw('count(*) as total, status'))
-                        ->groupBy('status')
-                        ->get();
+    public function createTahunPemilihan()
+    {
+        return view('pages/admin/setting-Tahun-pemilihan/create');
+    }
 
-    $statusespp = $suratCountsPP->pluck('status');
-    $totalspp = $suratCountsPP->pluck('total');
-
-    $totalSuratPP = SuratPenangananPelanggaranSengketaPemilu::where('status', 'done')->count();
-
-    $lastSuratPP = SuratPenangananPelanggaranSengketaPemilu::orderBy('no_surat', 'desc')->first();
-    $noSuratTerakhirPP = $lastSuratPP ? $lastSuratPP->no_surat : 'Belum ada surat';
-
-    // Surat Penanganan Penyelesaian Sengketa Pemilu
-    $suratCountsPs = SuratPenyelesaianSengketa::select(DB::raw('count(*) as total, status'))
-                        ->groupBy('status')
-                        ->get();
-
-    $statusesps = $suratCountsPs->pluck('status');
-    $totalsps = $suratCountsPs->pluck('total');
-    $totalSuratPS = SuratPenyelesaianSengketa::where('status', 'done')->count();
-    $lastSuratPs = SuratPenyelesaianSengketa::orderBy('no_surat', 'desc')->first();
-    $noSuratTerakhirPs = $lastSuratPs ? $lastSuratPs->no_surat : 'Belum ada surat';
-
-     // Surat Perencanaan
-     $suratCountsPr = SuratPerencanaan::select(DB::raw('count(*) as total, status'))
-     ->groupBy('status')
-     ->get();
-
-    $statusespr = $suratCountsPr->pluck('status');
-    $totalspr = $suratCountsPr->pluck('total');
-
-    $totalSuratPR = SuratPerencanaan::where('status', 'done')->count();
-
-    $lastSuratPr = SuratPerencanaan::orderBy('no_surat', 'desc')->first();
-    $noSuratTerakhirPr = $lastSuratPr ? $lastSuratPr->no_surat : 'Belum ada surat';
-
-     // Surat SURAT ORGANISASI DAN TATA LAKSANA (OT)
-     $suratCountsOt = SuratOrganisasiDanTataLaksana::select(DB::raw('count(*) as total, status'))
-     ->groupBy('status')
-     ->get();
-
-    $statusesot = $suratCountsOt->pluck('status');
-    $totalsot = $suratCountsOt->pluck('total');
-
-    $totalSuratOT = SuratOrganisasiDanTataLaksana::where('status', 'done')->count();
-
-    $lastSuratot = SuratOrganisasiDanTataLaksana::orderBy('no_surat', 'desc')->first();
-    $noSuratTerakhirOt = $lastSuratot ? $lastSuratot->no_surat : 'Belum ada surat';
-
-    // SURAT PERSURATAN DAN KEARSIPAN (KA)
-    $suratCountsKa = SuratPersuratanDanKearsipan::select(DB::raw('count(*) as total, status'))
-    ->groupBy('status')
-    ->get();
-
-    $statuseska = $suratCountsKa->pluck('status');
-    $totalska = $suratCountsKa->pluck('total');
-
-    $totalSuratKA = SuratPersuratanDanKearsipan::where('status', 'done')->count();
-
-    $lastSuratKa = SuratPersuratanDanKearsipan::orderBy('no_surat', 'desc')->first();
-    $noSuratTerakhirKa = $lastSuratKa ? $lastSuratKa->no_surat : 'Belum ada surat';
-
-    //dd($noSuratTerakhirKa);
-
-    // SURAT KEUANGAN (KU)
-    $suratCountsKu = SuratKeuangan::select(DB::raw('count(*) as total, status'))
-    ->groupBy('status')
-    ->get();
-
-    $statusesku = $suratCountsKu->pluck('status');
-    $totalsku = $suratCountsKu->pluck('total');
-
-    $totalSuratKU = SuratKeuangan::where('status', 'done')->count();
-
-    $lastSuratKu = SuratKeuangan::orderBy('no_surat', 'desc')->first();
-    $noSuratTerakhirKu = $lastSuratKu ? $lastSuratKu->no_surat : 'Belum ada surat';
-
-    //dd($noSuratTerakhirKa);
-
-    // SURAT KEUANGAN (PL)
-     $suratCountsPl = SuratPerlengkapan::select(DB::raw('count(*) as total, status'))
-     ->groupBy('status')
-     ->get();
- 
-     $statusespl = $suratCountsPl->pluck('status');
-     $totalspl = $suratCountsPl->pluck('total');
- 
-     $totalSuratPL = SuratPerlengkapan::where('status', 'done')->count();
- 
-     $lastSuratPl = SuratPerlengkapan::orderBy('no_surat', 'desc')->first();
-     $noSuratTerakhirPl = $lastSuratPl ? $lastSuratPl->no_surat : 'Belum ada surat';
- 
-     //dd($noSuratTerakhirPl);
-
-     // SURAT KEUANGAN (HK)
-     $suratCountsHk = SuratHukum::select(DB::raw('count(*) as total, status'))
-     ->groupBy('status')
-     ->get();
- 
-     $statuseshk = $suratCountsHk->pluck('status');
-     $totalshk = $suratCountsHk->pluck('total');
- 
-     $totalSuratHK = SuratHukum::where('status', 'done')->count();
- 
-     $lastSuratHk = SuratHukum::orderBy('no_surat', 'desc')->first();
-     $noSuratTerakhirHk = $lastSuratHk ? $lastSuratHk->no_surat : 'Belum ada surat';
- 
-     //dd($noSuratTerakhirPl);
-
-     $suratCountsHm = SuratHubunganMasyarakat::select(DB::raw('count(*) as total, status'))
-     ->groupBy('status')
-     ->get();
- 
-     $statuseshm = $suratCountsHm->pluck('status');
-     $totalshm = $suratCountsHm->pluck('total');
- 
-     $totalSuratHM = SuratHubunganMasyarakat::where('status', 'done')->count();
- 
-     $lastSuratHm = SuratHubunganMasyarakat::orderBy('no_surat', 'desc')->first();
-     $noSuratTerakhirHm = $lastSuratHm ? $lastSuratHm->no_surat : 'Belum ada surat';
- 
-     //dd($noSuratTerakhirPl);
-
-     $suratCountsKp = SuratKepegawaian::select(DB::raw('count(*) as total, status'))
-     ->groupBy('status')
-     ->get();
- 
-     $statuseskp = $suratCountsKp->pluck('status');
-     $totalskp = $suratCountsKp->pluck('total');
- 
-     $totalSuratKP = SuratKepegawaian::where('status', 'done')->count();
- 
-     $lastSuratKp = SuratKepegawaian::orderBy('no_surat', 'desc')->first();
-     $noSuratTerakhirKp = $lastSuratKp ? $lastSuratKp->no_surat : 'Belum ada surat';
- 
-     //dd($noSuratTerakhirPl);
-
-     $suratCountsRt = SuratKetatausahaanDanKerumahtangaan::select(DB::raw('count(*) as total, status'))
-     ->groupBy('status')
-     ->get();
- 
-     $statusesrt = $suratCountsRt->pluck('status');
-     $totalsrt = $suratCountsRt->pluck('total');
- 
-     $totalSuratRT = SuratKetatausahaanDanKerumahtangaan::where('status', 'done')->count();
- 
-     $lastSuratRt = SuratKetatausahaanDanKerumahtangaan::orderBy('no_surat', 'desc')->first();
-     $noSuratTerakhirRt = $lastSuratRt ? $lastSuratRt->no_surat : 'Belum ada surat';
- 
-     //dd($noSuratTerakhirPl);
-
-     $suratCountsPw = SuratPengawasan::select(DB::raw('count(*) as total, status'))
-     ->groupBy('status')
-     ->get();
- 
-     $statusespw = $suratCountsPw->pluck('status');
-     $totalspw = $suratCountsPw->pluck('total');
- 
-     $totalSuratPW = SuratPengawasan::where('status', 'done')->count();
- 
-     $lastSuratPw = SuratPengawasan::orderBy('no_surat', 'desc')->first();
-     $noSuratTerakhirPw = $lastSuratPw ? $lastSuratPw->no_surat : 'Belum ada surat';
- 
-     //dd($noSuratTerakhirPl);
-
-     $suratCountsTi = SuratPengawasan::select(DB::raw('count(*) as total, status'))
-     ->groupBy('status')
-     ->get();
- 
-     $statusesti = $suratCountsTi->pluck('status');
-     $totalsti = $suratCountsTi->pluck('total');
- 
-     $totalSuratTI = SuratPengawasan::where('status', 'done')->count();
- 
-     $lastSuratTi = SuratPengawasan::orderBy('no_surat', 'desc')->first();
-     $noSuratTerakhirTi = $lastSuratTi ? $lastSuratTi->no_surat : 'Belum ada surat';
- 
-     //dd($noSuratTerakhirPl);
-     // Mengambil data log dengan relasi user dan surat, dan mempaginate dengan lima item per halaman
-     $logs = SuratLog::with(['user', 'surat'])->latest()->paginate(5);
-     $totalSuratSelesai = $totalSuratTI + $totalSuratPW + $totalSuratRT + $totalSuratKP + $totalSuratHM + $totalSuratHK + $totalSuratPL + $totalSuratKU + $totalSuratKA + $totalSuratOT + $totalSuratPS + $totalSuratPR + $totalSuratPP + $totalSuratPM;
-
-//dd($totalSuratPM);
-     return view('pages/perusahaan/dashboard', [
-        'totalSuratSelesai' => $totalSuratSelesai,
-        'logs' => $logs,
-        'totalSuratTI' => $totalSuratTI,
-        'totalSuratPW' => $totalSuratPW,
-        'totalSuratRT' => $totalSuratRT,
-        'totalSuratKP' => $totalSuratKP,
-        'totalSuratHM' => $totalSuratHM,
-        'totalSuratHK' => $totalSuratHK,
-        'totalSuratPL' => $totalSuratPL,
-        'totalSuratKU' => $totalSuratKU,
-        'totalSuratKA' => $totalSuratKA,
-        'totalSuratOT' => $totalSuratOT,
-        'totalSuratPS' => $totalSuratPS,
-        'totalSuratPR' => $totalSuratPR,
-        'totalSuratPP' => $totalSuratPP,
-        'totalSuratPM' => $totalSuratPM,
-        'statusespm' => $statusespm,
-        'totalspm' => $totalspm,
-        'noSuratTerakhirPM' => $noSuratTerakhirPM,
-        'statusespp' => $statusespp,
-        'totalspp' => $totalspp,
-        'noSuratTerakhirPP' => $noSuratTerakhirPP,
-        'statusesps' => $statusesps,
-        'totalsps' => $totalsps,
-        'noSuratTerakhirPs' => $noSuratTerakhirPs,
-        'statusespr' => $statusespr,
-        'totalspr' => $totalspr,
-        'noSuratTerakhirPr' => $noSuratTerakhirPr,
-        'statusesot' => $statusesot,
-        'totalsot' => $totalsot,
-        'noSuratTerakhirOt' => $noSuratTerakhirOt,
-        'statuseska' => $statuseska,
-        'totalska' => $totalska,
-        'noSuratTerakhirKa' => $noSuratTerakhirKa,
-        'statusesku' => $statusesku,
-        'totalsku' => $totalsku,
-        'noSuratTerakhirKu' => $noSuratTerakhirKu,
-        'statusespl' => $statusespl,
-        'totalspl' => $totalspl,
-        'noSuratTerakhirPl' => $noSuratTerakhirPl,
-        'statuseshk' => $statuseshk,
-        'totalshk' => $totalshk,
-        'noSuratTerakhirHk' => $noSuratTerakhirHk,
-        'statuseshm' => $statuseshm,
-        'totalshm' => $totalshm,
-        'noSuratTerakhirHm' => $noSuratTerakhirHm,
-        'statuseskp' => $statuseskp,
-        'totalskp' => $totalskp,
-        'noSuratTerakhirKp' => $noSuratTerakhirKp,
-        'statusesrt' => $statusesrt,
-        'totalsrt' => $totalsrt,
-        'noSuratTerakhirRt' => $noSuratTerakhirRt,
-        'statusespw' => $statusespw,
-        'totalspw' => $totalspw,
-        'noSuratTerakhirPw' => $noSuratTerakhirPw,
-        'statusesti' => $statusesti,
-        'totalsti' => $totalsti,
-        'noSuratTerakhirTi' => $noSuratTerakhirTi,
+    public function storeTahunPemilihan(Request $request)
+    {
+    $request->validate([
+        'tahun_pemilihan' => 'required|date_format:Y',
     ]);
-    
+
+    $tahunPemilihan = new TahunPemilihan;
+    $tahunPemilihan->tahun_pemilihan = $request->tahun_pemilihan;
+    $tahunPemilihan->save();
+
+    return redirect()->route('SettingTahunPemilihan')->with('success', 'Tahun Pemilihan berhasil ditambahkan.');
+    }
+
+    public function destroyTahunPemilihan($id)
+{
+    $tahunPemilihan = TahunPemilihan::findOrFail($id);
+    $tahunPemilihan->delete();
+
+    return redirect()->route('SettingTahunPemilihan')->with('success', 'Tahun Pemilihan berhasil dihapus.');
 }
+
+public function editTahunPemilihan($id)
+{
+    $tahunPemilihan = TahunPemilihan::findOrFail($id);
+
+    return view('pages/admin/setting-Tahun-pemilihan/edit', compact('tahunPemilihan'));
+}
+
+public function updateTahunPemilihan(Request $request, $id)
+{
+    $request->validate([
+        'tahun_pemilihan' => 'required|date_format:Y',
+    ]);
+
+    $tahunPemilihan = TahunPemilihan::findOrFail($id);
+    $tahunPemilihan->tahun_pemilihan = $request->tahun_pemilihan;
+    $tahunPemilihan->save();
+
+    return redirect()->route('SettingTahunPemilihan')->with('success', 'Tahun Pemilihan berhasil diperbarui.');
+}
+
+public function index()
+{
+    // Dapatkan tahun pemilihan aktif
+    $tahunPemilihanAktif = TahunPemilihanAktif::pluck('tahun_pemilihan_aktif')->first();
+    $tahunPemilihans = TahunPemilihan::all();
+
+    // Ambil total aduan berdasarkan status untuk tahun pemilihan aktif
+    $aduanPresidenCounts = AduanPresidenWakilPresiden::select('status', \DB::raw('count(*) as total'))
+        ->where('tahun_pemilihan_id', $tahunPemilihanAktif)
+        ->groupBy('status')
+        ->get();
+
+    $aduanDPDCounts = AduanDpdRi::select('status', \DB::raw('count(*) as total'))
+        ->where('tahun_pemilihan_id', $tahunPemilihanAktif)
+        ->groupBy('status')
+        ->get();
+
+    $aduanDPRCounts = AduanDprRi::select('status', \DB::raw('count(*) as total'))
+        ->where('tahun_pemilihan_id', $tahunPemilihanAktif)
+        ->groupBy('status')
+        ->get();
+    
+    $aduanDPRDprovinsiCounts = AduanDprdProvinsi::select('status', \DB::raw('count(*) as total'))
+        ->where('tahun_pemilihan_id', $tahunPemilihanAktif)
+        ->groupBy('status')
+        ->get();
+
+    $aduanDPRDkabupatenCounts = AduanDprdProvinsi::select('status', \DB::raw('count(*) as total'))
+        ->where('tahun_pemilihan_id', $tahunPemilihanAktif)
+        ->groupBy('status')
+        ->get();
+
+    $totalAkhirpresiden = $aduanPresidenCounts->sum('total');
+    $totalAkhirdpd = $aduanDPDCounts->sum('total');
+    $totalAkhirdpr = $aduanDPRCounts->sum('total');
+    $totalAkhirdprdprovinsi = $aduanDPRDprovinsiCounts->sum('total');
+    $totalAkhirdprdkabupaten = $aduanDPRDkabupatenCounts->sum('total');
+
+    $aduanLogs = AduanLog::orderBy('created_at', 'desc')->paginate(5);
+
+    //dd($totalAkhirpresiden);
+    
+
+    return view('pages.perusahaan.dashboard', [
+        'tahunPemilihanAktif' => $tahunPemilihanAktif,
+        'tahunPemilihans' => $tahunPemilihans,
+        'aduanPresidenCounts' => $aduanPresidenCounts,
+        'aduanDPDCounts' => $aduanDPDCounts,
+        'aduanDPRCounts' => $aduanDPRCounts,
+        'aduanDPRDprovinsiCounts' => $aduanDPRDprovinsiCounts,
+        'aduanDPRDkabupatenCounts' => $aduanDPRDkabupatenCounts,
+        'totalAkhirpresiden' => $totalAkhirpresiden,
+        'totalAkhirdpd' => $totalAkhirdpd,
+        'totalAkhirdpr' => $totalAkhirdpr,
+        'totalAkhirdprdprovinsi' => $totalAkhirdprdprovinsi,
+        'totalAkhirdprdkabupaten' => $totalAkhirdprdkabupaten,
+        'aduanLogs' => $aduanLogs,
+    ]);
+}
+
+
 
 
 
@@ -298,8 +179,9 @@ class AdminController extends Controller
 
         // Cari surat pengawasan pemilu yang terkait dengan pengguna yang saat ini masuk
         $suratPengawasanPemilus = SuratPengawasanPemilu::where('user_id', $userId)->get();
+        $tahunPemilihans = TahunPemilihan::all();
 
-        return view('pages/admin/index', compact('suratPengawasanPemilus'));
+        return view('pages/admin/index', compact('tahunPemilihans','suratPengawasanPemilus'));
     }
 
     //Surat PM
