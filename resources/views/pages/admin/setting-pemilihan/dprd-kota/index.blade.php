@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <br>
-                <a href="{{ route('calon_dprd_provinsi.create') }}" class="btn btn-primary">Tambah Calon</a>
+                <a href="{{ route('calon-dprd-kota.create') }}" class="btn btn-primary">Tambah Calon</a>
                 <br>
                 @if ($message = Session::get('success'))
                     <div class="alert alert-success mt-2">
