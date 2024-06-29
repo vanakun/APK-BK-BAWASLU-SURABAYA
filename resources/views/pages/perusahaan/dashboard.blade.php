@@ -58,7 +58,7 @@
                 <!-- END: Official Store -->
     <div class="col-span-12 md:col-span-8 md:col-span-4 py-6 sm:pl-5 md:pl-1 lg:pl-5 relative text-center sm:text-left">
         <div class="box px-5 py-3 ml-4 flex-1 zoom-in">
-        <div class="text-slate-500">Total Aduan Presiden dan Wakil  </div> <br>
+        <div class="text-slate-500">Total Aduan PRESIDEN DAN WAKIL PRESIDEN </div> <br>
             <br>
             <div class="text-slate-500"></div>
             <br>
@@ -142,7 +142,7 @@
 
     <div class="col-span-12 sm:col-span-6 md:col-span-4 py-6 sm:pl-5 md:pl-0 lg:pl-5 relative text-center sm:text-left">
         <div class="box px-5 py-3 ml-4 flex-1 zoom-in">
-            <div class="text-slate-500">Total Aduan DPRD KABUPATEN  </div>
+            <div class="text-slate-500">Total Aduan DPRD KAB/KOTA  </div>
             <br>
             <div class="flex items-center">
                 <div class="container">

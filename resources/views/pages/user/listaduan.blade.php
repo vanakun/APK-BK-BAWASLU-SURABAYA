@@ -16,19 +16,19 @@
             </div>
             <div class="grid grid-cols-12 gap-6 mt-5">
                 <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-                    <button class="btn btn-primary shadow-md mr-2"><a href="{{ route('aduan_presiden_wakil_presiden.create') }}">Tambah Pengajuan Aduan Presiden Dan Wakil Presiden</a></button>
+                    <button class="btn btn-primary shadow-md mr-2"><a href="{{ route('aduan_presiden_wakil_presiden.create') }}">Tambah Pengajuan Aduan PRESIDEN DAN WAKIL PRESIDEN</a></button>
                 </div>
                 <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-                    <button class="btn btn-primary shadow-md mr-2"><a href="{{ route('aduan_dpd_ri.create') }}">Tambah Pengajuan Aduan Dpd Ri </a></button>
+                    <button class="btn btn-primary shadow-md mr-2"><a href="{{ route('aduan_dpd_ri.create') }}">Tambah Pengajuan Aduan DPD RI </a></button>
                 </div>
                 <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-                    <button class="btn btn-primary shadow-md mr-2"><a href="{{ route('aduan_dpr_ri.create') }}">Tambah Pengajuan Aduan Dpr Ri </a></button>
+                    <button class="btn btn-primary shadow-md mr-2"><a href="{{ route('aduan_dpr_ri.create') }}">Tambah Pengajuan Aduan DPR RI </a></button>
                 </div>
                 <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-                    <button class="btn btn-primary shadow-md mr-2"><a href="{{ route('aduan_dprd_provinsi.create') }}">Tambah Pengajuan Aduan Dprd Provinsi </a></button>
+                    <button class="btn btn-primary shadow-md mr-2"><a href="{{ route('aduan_dprd_provinsi.create') }}">Tambah Pengajuan Aduan DPRD PROVINSI</a></button>
                 </div>
                 <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-                    <button class="btn btn-primary shadow-md mr-2"><a href="{{ route('aduan_dprd_kabupaten.create') }}">Tambah Pengajuan Aduan Dprd Kota/Kab </a></button>
+                    <button class="btn btn-primary shadow-md mr-2"><a href="{{ route('aduan_dprd_kabupaten.create') }}">Tambah Pengajuan Aduan DPRD KAB/KOTA </a></button>
                 </div>
                 <!-- END: Blog Layout -->
             </div>

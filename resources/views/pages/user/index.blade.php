@@ -269,7 +269,7 @@
         {!! $aduanDprdProvinsi->links('pagination') !!}
     </div>
 </div>
-<h2 class="intro-y text-lg font-medium mt-10">Pengajuan Aduan DPRD - KABUPATEN/PROVINSI</h2>
+<h2 class="intro-y text-lg font-medium mt-10">Pengajuan Aduan DPRD - KABUPATEN/KOTA </h2>
     <br>
 <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
     <table class="table table-report -mt-2">
@@ -278,7 +278,7 @@
                 <th class="whitespace-nowrap">#</th>
                 <th class="whitespace-nowrap">Status</th>
                 <th class="whitespace-nowrap">Tanggal</th>
-                <th class="whitespace-nowrap">Nama Calon DPRD - PROVINSI</th>
+                <th class="whitespace-nowrap">Nama Calon DPRD - KABUPATEN/KOTA</th>
                 <th class="whitespace-nowrap">Nama Partai</th>
                 <th class="whitespace-nowrap">Lokasi Pemasangan</th>
                 <th class="whitespace-nowrap">Tanggal Laporan</th>
